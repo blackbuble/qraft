@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Apply dynamic storage configuration
+        try {
+            app(\App\Services\StorageConfigService::class)->apply();
+        } catch (\Exception $e) {
+            // Silently fail if settings table not yet migrated
+        }
     }
 }
