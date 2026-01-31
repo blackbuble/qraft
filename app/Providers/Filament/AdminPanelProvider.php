@@ -26,10 +26,19 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\Login::class)
+            ->tenant(\App\Models\Organization::class)
+            ->tenantRegistration(\App\Filament\Pages\Tenancy\RegisterOrganization::class)
+            ->tenantProfile(\App\Filament\Pages\Tenancy\EditOrganizationProfile::class)
+            ->tenantMenuItems([
+                'register' => \Filament\Navigation\MenuItem::make()
+                    ->label('Create Organization'),
+            ])
             ->darkMode()
+            ->brandLogo(asset('images/logo-light.png'))
             ->darkModeBrandLogo(asset('images/logo-dark.png'))
             ->brandName('QRAFT')
+            ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => Color::Amber,
             ])

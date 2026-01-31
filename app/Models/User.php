@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_super_admin',
     ];
 
     /**
@@ -44,7 +46,63 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_super_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Get all organizations this user belongs to.
+     */
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class, 'organization_user')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the current organization for this user.
+     */
+    public function currentOrganization(): ?Organization
+    {
+        // Get from session or return first organization
+        $orgId = session('current_organization_id');
+
+        if ($orgId) {
+            return $this->organizations()->find($orgId);
+        }
+
+        return $this->organizations()->first();
+    }
+
+    /**
+     * Switch to a different organization.
+     */
+    public function switchOrganization(string $organizationId): bool
+    {
+        if ($this->organizations()->where('organizations.id', $organizationId)->exists()) {
+            session(['current_organization_id' => $organizationId]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user owns the given organization.
+     */
+    public function ownsOrganization(Organization $organization): bool
+    {
+        return $this->id === $organization->owner_id;
+    }
+
+    /**
+     * Get user's role in the given organization.
+     */
+    public function roleInOrganization(Organization $organization): ?string
+    {
+        $pivot = $this->organizations()->where('organizations.id', $organization->id)->first()?->pivot;
+        return $pivot?->role;
     }
 
     /**
