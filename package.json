@@ -3,8 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "setup": "node scripts/setup.mjs",
+        "setup:playwright": "node scripts/setup-playwright.mjs",
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
