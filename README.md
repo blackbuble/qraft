@@ -177,11 +177,12 @@ php artisan qraft:run --scenario=123
 
 ## 📖 Documentation
 
-- [Installation Guide](docs/installation.md)
-- [AI Test Generation](docs/ai-generation.md)
-- [Self-Healing Selectors](docs/self-healing.md)
-- [API Reference](docs/api.md)
-- [Best Practices](docs/best-practices.md)
+- **[Installation Guide](docs/INSTALLATION.md)** - Complete setup for all platforms
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute
+- **[Product Roadmap](docs/ROADMAP.md)** - Future plans
+- **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - All docs
+- **[Herd Setup](docs/SETUP_HERD.md)** - macOS with Laravel Herd
+- **[Laragon Setup](docs/SETUP_LARAGON.md)** - Windows with Laragon
 
 ---
 
