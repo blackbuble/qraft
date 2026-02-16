@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Model;
 
 class Run extends Model
 {
+    use BelongsToOrganization;
+
     protected $guarded = [];
     protected $casts = [
         'result' => 'array',

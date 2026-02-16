@@ -3,7 +3,6 @@
 /**
  * Cross-platform development setup script for QRAFT
  * Optimized for Laravel Herd (Mac) and Laragon (Windows)
- * Includes Playwright browser installation
  */
 
 import { execSync } from 'child_process';
@@ -72,31 +71,6 @@ try {
 } catch (err) {
     console.error('❌ NPM install failed');
     process.exit(1);
-}
-
-// Setup Playwright browsers
-console.log('\n🎭 Setting up Playwright browsers...');
-console.log('   This may take a few minutes on first run...');
-try {
-    if (existsSync('./inspector-service')) {
-        // Install inspector-service dependencies
-        console.log('   Installing inspector-service dependencies...');
-        execSync('cd inspector-service && npm install', { stdio: 'inherit', shell: true });
-
-        // Install Playwright browsers
-        console.log('   Installing Playwright browsers (Chromium, Firefox, WebKit)...');
-        execSync('cd inspector-service && npx playwright install --with-deps', {
-            stdio: 'inherit',
-            shell: true
-        });
-
-        console.log('✅ Playwright browsers installed successfully');
-    } else {
-        console.warn('⚠️  inspector-service not found, skipping Playwright setup');
-    }
-} catch (err) {
-    console.warn('⚠️  Playwright setup failed - you may need to run it manually');
-    console.log('   Run: cd inspector-service && npx playwright install --with-deps');
 }
 
 // Generate application key

@@ -11,6 +11,10 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/webhooks/inspector', [InspectorController::class, 'handleWebhook']);
 
+// Stripe Webhooks
+Route::post('/webhooks/stripe', [\App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
+
 // AI-Powered Element Discovery
 Route::post('/ai/find-element', [AiElementController::class, 'findElement']);
 Route::post('/ai/heal-selector', [AiElementController::class, 'healSelector']);
+
