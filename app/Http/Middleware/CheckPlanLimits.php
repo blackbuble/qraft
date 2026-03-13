@@ -18,7 +18,7 @@ class CheckPlanLimits
     {
         $organization = Filament::getTenant();
 
-        if (!$organization) {
+        if (! $organization) {
             return $next($request);
         }
 
@@ -32,7 +32,7 @@ class CheckPlanLimits
             default => true,
         };
 
-        if (!$canProceed) {
+        if (! $canProceed) {
             Notification::make()
                 ->title('Plan Limit Reached')
                 ->body("You've reached your plan limit for {$feature}s. Please upgrade your plan to continue.")
@@ -50,7 +50,7 @@ class CheckPlanLimits
         }
 
         // Show warning if approaching limit (>= 80%)
-        $percentage = $planLimits->getUsagePercentage($organization, $feature . 's');
+        $percentage = $planLimits->getUsagePercentage($organization, $feature.'s');
 
         if ($percentage >= 80 && $percentage < 100) {
             Notification::make()

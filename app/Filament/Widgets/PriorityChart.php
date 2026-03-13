@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class PriorityChart extends ChartWidget
 {
     protected static ?string $heading = 'Runs by Priority';
+
     protected static ?int $sort = 4;
 
     protected function getData(): array
@@ -31,12 +32,12 @@ class PriorityChart extends ChartWidget
                 [
                     'label' => 'Priority',
                     'data' => $data->values()->toArray(),
-                    'backgroundColor' => $data->keys()->map(fn($priority) => $colors[$priority] ?? '#cbd5e1')->toArray(),
+                    'backgroundColor' => $data->keys()->map(fn ($priority) => $colors[$priority] ?? '#cbd5e1')->toArray(),
                     'borderWidth' => 0,
                     'hoverOffset' => 4,
                 ],
             ],
-            'labels' => $data->keys()->map(fn($val) => ucfirst($val))->toArray(),
+            'labels' => $data->keys()->map(fn ($val) => ucfirst($val))->toArray(),
         ];
     }
 

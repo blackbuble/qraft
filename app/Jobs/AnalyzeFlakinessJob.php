@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\TestScenario;
 use App\Models\TestFlakiness;
+use App\Models\TestScenario;
 use App\Services\AiService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,6 +32,7 @@ class AnalyzeFlakinessJob implements ShouldQueue
 
         if ($runs->count() < 5) {
             Log::info("TestScenario #{$this->testScenario->id}: Not enough runs for flakiness analysis");
+
             return;
         }
 
@@ -152,7 +153,7 @@ class AnalyzeFlakinessJob implements ShouldQueue
                 'type' => 'time_based',
                 'peak_hour' => $peakHour,
                 'peak_rate' => round($peakRate, 1),
-                'description' => "Failures peak at {$peakHour}:00 ({$peakRate}% failure rate)"
+                'description' => "Failures peak at {$peakHour}:00 ({$peakRate}% failure rate)",
             ];
         }
 
@@ -194,7 +195,7 @@ class AnalyzeFlakinessJob implements ShouldQueue
                 'type' => 'day_based',
                 'peak_day' => $peakDay,
                 'peak_rate' => round($peakRate, 1),
-                'description' => "Failures peak on {$peakDay} ({$peakRate}% failure rate)"
+                'description' => "Failures peak on {$peakDay} ({$peakRate}% failure rate)",
             ];
         }
 
@@ -290,7 +291,7 @@ class AnalyzeFlakinessJob implements ShouldQueue
                 }
             }
         } catch (\Exception $e) {
-            Log::error("AI diagnosis failed: " . $e->getMessage());
+            Log::error('AI diagnosis failed: '.$e->getMessage());
         }
 
         // Fallback diagnosis based on patterns
@@ -300,30 +301,30 @@ class AnalyzeFlakinessJob implements ShouldQueue
     protected function getFallbackDiagnosis($pattern, $metrics)
     {
         $diagnosis = "Test shows flaky behavior with {$metrics['transitions']} transitions between pass/fail states. ";
-        $fix = "";
+        $fix = '';
 
         if ($pattern['time_based']) {
-            $diagnosis .= $pattern['time_based']['description'] . ". This suggests a time-dependent issue. ";
+            $diagnosis .= $pattern['time_based']['description'].'. This suggests a time-dependent issue. ';
             $fix = "Investigate scheduled tasks, cron jobs, or server maintenance that might occur at {$pattern['time_based']['peak_hour']}:00. ";
         }
 
         if ($pattern['day_based']) {
-            $diagnosis .= $pattern['day_based']['description'] . ". This suggests a weekly pattern. ";
+            $diagnosis .= $pattern['day_based']['description'].'. This suggests a weekly pattern. ';
             $fix .= "Check for weekly deployments, backups, or increased load on {$pattern['day_based']['peak_day']}. ";
         }
 
         if ($pattern['failure_rate_trend'] === 'worsening') {
-            $diagnosis .= "Failure rate is worsening over time. ";
-            $fix .= "Recent code changes may have introduced race conditions or timing issues. ";
+            $diagnosis .= 'Failure rate is worsening over time. ';
+            $fix .= 'Recent code changes may have introduced race conditions or timing issues. ';
         }
 
         if (empty($fix)) {
-            $fix = "Add explicit waits, use more stable selectors, or check for race conditions in the test steps.";
+            $fix = 'Add explicit waits, use more stable selectors, or check for race conditions in the test steps.';
         }
 
         return [
             'diagnosis' => trim($diagnosis),
-            'fix' => trim($fix)
+            'fix' => trim($fix),
         ];
     }
 }

@@ -8,8 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class InspectUrlJob implements ShouldQueue
 {
@@ -37,15 +37,15 @@ class InspectUrlJob implements ShouldQueue
         $payload = [
             'run_id' => $this->run->id,
             'url' => $project->repo_url, // Assuming repo_url acts as the target URL for now, or add 'url' to project
-            'actions' => []
+            'actions' => [],
         ];
 
         try {
             Redis::rpush('qraft:inspector:tasks', json_encode($payload));
             Log::info("Dispatched Run #{$this->run->id} to inspector queue.");
         } catch (\Exception $e) {
-            $this->run->update(['status' => 'failed', 'logs' => "Failed to dispatch: " . $e->getMessage()]);
-            Log::error("Failed to push to Redis: " . $e->getMessage());
+            $this->run->update(['status' => 'failed', 'logs' => 'Failed to dispatch: '.$e->getMessage()]);
+            Log::error('Failed to push to Redis: '.$e->getMessage());
         }
     }
 }

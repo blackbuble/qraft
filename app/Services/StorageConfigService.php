@@ -11,7 +11,7 @@ class StorageConfigService
     {
         $settings = app(StorageSettings::class);
 
-        if ($settings->artifact_disk === 's3' && !empty($settings->s3_key)) {
+        if ($settings->artifact_disk === 's3' && ! empty($settings->s3_key)) {
             Config::set('filesystems.disks.s3.key', $settings->s3_key);
             Config::set('filesystems.disks.s3.secret', $settings->s3_secret);
             Config::set('filesystems.disks.s3.region', $settings->s3_region);

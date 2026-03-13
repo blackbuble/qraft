@@ -2,12 +2,13 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
 use App\Models\Run;
+use Filament\Widgets\ChartWidget;
 
 class SeverityChart extends ChartWidget
 {
     protected static ?string $heading = 'Issues by Severity';
+
     protected static ?int $sort = 3;
 
     protected function getData(): array
@@ -32,12 +33,12 @@ class SeverityChart extends ChartWidget
                 [
                     'label' => 'Severity',
                     'data' => $data->values()->toArray(),
-                    'backgroundColor' => $data->keys()->map(fn($severity) => $colors[strtolower($severity)] ?? '#cbd5e1')->toArray(), // Gray-400 fallback
+                    'backgroundColor' => $data->keys()->map(fn ($severity) => $colors[strtolower($severity)] ?? '#cbd5e1')->toArray(), // Gray-400 fallback
                     'borderWidth' => 0,
                     'hoverOffset' => 4,
                 ],
             ],
-            'labels' => $data->keys()->map(fn($val) => ucfirst($val))->toArray(),
+            'labels' => $data->keys()->map(fn ($val) => ucfirst($val))->toArray(),
         ];
     }
 

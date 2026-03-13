@@ -18,7 +18,7 @@ class AiElementController extends Controller
 
     /**
      * Find element by natural language description
-     * 
+     *
      * POST /api/ai/find-element
      * Body: { "screenshot": "base64...", "description": "the blue submit button" }
      */
@@ -43,7 +43,7 @@ class AiElementController extends Controller
 
     /**
      * Heal broken selector
-     * 
+     *
      * POST /api/ai/heal-selector
      * Body: { "screenshot": "base64...", "failed_selector": "#old-btn", "description": "submit button" }
      */

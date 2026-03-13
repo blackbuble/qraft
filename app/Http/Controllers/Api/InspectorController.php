@@ -27,15 +27,15 @@ class InspectorController extends Controller
         // Handle Artifact Storage
         $settings = app(\App\Settings\StorageSettings::class);
 
-        if (!empty($result['screenshot']) && $settings->store_screenshots) {
+        if (! empty($result['screenshot']) && $settings->store_screenshots) {
             try {
                 $disk = $settings->artifact_disk;
                 $basePath = trim($settings->artifact_path, '/');
-                $filename = "{$basePath}/run_{$run->id}_" . time() . ".jpg";
+                $filename = "{$basePath}/run_{$run->id}_".time().'.jpg';
                 $imageContent = base64_decode($result['screenshot']);
 
                 \Illuminate\Support\Facades\Storage::disk($disk)->put($filename, $imageContent, [
-                    'visibility' => $settings->visibility
+                    'visibility' => $settings->visibility,
                 ]);
 
                 $result['screenshot_path'] = $filename;
@@ -45,7 +45,7 @@ class InspectorController extends Controller
                 // Remove base64 from result to save DB space
                 unset($result['screenshot']);
             } catch (\Exception $e) {
-                Log::error("Failed to store screenshot for Run #{$run->id}: " . $e->getMessage());
+                Log::error("Failed to store screenshot for Run #{$run->id}: ".$e->getMessage());
                 // Fallback: keep base64 if storage fails
             }
         }

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -37,14 +37,14 @@ class RolesAndPermissionsSeeder extends Seeder
             'create_scenarios',
             'edit_scenarios',
             'delete_scenarios',
-            'view_reports'
+            'view_reports',
         ]);
 
         // CTO/Leads: Read-only mostly + triggering runs (if we had a permission for it), getting reports
         $role = Role::create(['name' => 'CTO']);
         $role->givePermissionTo([
             'view_runs',
-            'view_reports'
+            'view_reports',
         ]);
 
         // Admin: Everything

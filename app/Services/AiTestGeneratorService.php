@@ -16,9 +16,9 @@ class AiTestGeneratorService
 
     /**
      * Generate complete test scenario from natural language requirement
-     * 
-     * @param string $requirement Natural language description
-     * @param Project $project Project context for base URL
+     *
+     * @param  string  $requirement  Natural language description
+     * @param  Project  $project  Project context for base URL
      * @return array Test steps with enhanced metadata
      */
     public function generateFromRequirement(string $requirement, Project $project): array
@@ -38,8 +38,8 @@ class AiTestGeneratorService
             return $steps;
 
         } catch (\Exception $e) {
-            Log::error("AI Test Generation failed: " . $e->getMessage());
-            throw new \Exception("Failed to generate test: " . $e->getMessage());
+            Log::error('AI Test Generation failed: '.$e->getMessage());
+            throw new \Exception('Failed to generate test: '.$e->getMessage());
         }
     }
 
@@ -143,7 +143,7 @@ EOT;
             return $steps;
         }
 
-        throw new \Exception("Failed to parse AI response as JSON: " . json_last_error_msg());
+        throw new \Exception('Failed to parse AI response as JSON: '.json_last_error_msg());
     }
 
     /**
@@ -157,18 +157,19 @@ EOT;
         $validated = [];
 
         foreach ($steps as $step) {
-            if (!isset($step['action']) || !in_array($step['action'], $validActions)) {
-                Log::warning("Invalid action in step: " . json_encode($step));
+            if (! isset($step['action']) || ! in_array($step['action'], $validActions)) {
+                Log::warning('Invalid action in step: '.json_encode($step));
+
                 continue;
             }
 
             // Ensure selector_type is valid
-            if (isset($step['selector_type']) && !in_array($step['selector_type'], $validSelectorTypes)) {
+            if (isset($step['selector_type']) && ! in_array($step['selector_type'], $validSelectorTypes)) {
                 $step['selector_type'] = 'css'; // Default to CSS
             }
 
             // Set default selector_type if missing
-            if (isset($step['selector']) && !isset($step['selector_type'])) {
+            if (isset($step['selector']) && ! isset($step['selector_type'])) {
                 $step['selector_type'] = 'css';
             }
 
@@ -187,7 +188,7 @@ EOT;
 
         foreach ($steps as $step) {
             // Add default description if missing
-            if (!isset($step['description'])) {
+            if (! isset($step['description'])) {
                 $step['description'] = $this->generateDescription($step);
             }
 
@@ -206,25 +207,25 @@ EOT;
 
         switch ($action) {
             case 'visit':
-                return "Navigate to " . ($step['value'] ?? 'page');
+                return 'Navigate to '.($step['value'] ?? 'page');
             case 'click':
-                return "Click " . ($step['selector'] ?? 'element');
+                return 'Click '.($step['selector'] ?? 'element');
             case 'type':
-                return "Enter text into " . ($step['selector'] ?? 'field');
+                return 'Enter text into '.($step['selector'] ?? 'field');
             case 'hover':
-                return "Hover over " . ($step['selector'] ?? 'element');
+                return 'Hover over '.($step['selector'] ?? 'element');
             case 'select':
-                return "Select option from " . ($step['selector'] ?? 'dropdown');
+                return 'Select option from '.($step['selector'] ?? 'dropdown');
             case 'check':
-                return "Check " . ($step['selector'] ?? 'checkbox');
+                return 'Check '.($step['selector'] ?? 'checkbox');
             case 'uncheck':
-                return "Uncheck " . ($step['selector'] ?? 'checkbox');
+                return 'Uncheck '.($step['selector'] ?? 'checkbox');
             case 'wait':
-                return "Wait " . ($step['value'] ?? '1000') . "ms";
+                return 'Wait '.($step['value'] ?? '1000').'ms';
             case 'assert_text':
-                return "Verify text: " . ($step['value'] ?? '');
+                return 'Verify text: '.($step['value'] ?? '');
             case 'assert_visible':
-                return "Verify " . ($step['selector'] ?? 'element') . " is visible";
+                return 'Verify '.($step['selector'] ?? 'element').' is visible';
             default:
                 return ucfirst($action);
         }
@@ -238,9 +239,10 @@ EOT;
         $prompt = "The following test steps were generated but need improvement:\n\n";
         $prompt .= json_encode($currentSteps, JSON_PRETTY_PRINT);
         $prompt .= "\n\nUser Feedback: $feedback\n\n";
-        $prompt .= "Please regenerate the steps addressing the feedback. Return ONLY the JSON array.";
+        $prompt .= 'Please regenerate the steps addressing the feedback. Return ONLY the JSON array.';
 
         $response = $this->aiService->analyze($prompt);
+
         return $this->parseSteps($response);
     }
 }

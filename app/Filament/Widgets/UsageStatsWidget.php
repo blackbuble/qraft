@@ -35,7 +35,7 @@ class UsageStatsWidget extends Widget
 
         // Show upgrade prompt if any feature is at >= 80% usage
         foreach ($stats as $stat) {
-            if (!$stat['unlimited'] && $stat['percentage'] >= 80) {
+            if (! $stat['unlimited'] && $stat['percentage'] >= 80) {
                 return true;
             }
         }

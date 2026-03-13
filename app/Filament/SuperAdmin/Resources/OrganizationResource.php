@@ -87,7 +87,7 @@ class OrganizationResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subscription_plan')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'free' => 'gray',
                         'pro' => 'success',
                         'enterprise' => 'warning',
@@ -96,7 +96,7 @@ class OrganizationResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subscription_status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
                         'canceled' => 'danger',
                         'past_due' => 'warning',

@@ -28,7 +28,7 @@ class PlatformStatsWidget extends BaseWidget
 
         return [
             Stat::make('Total Organizations', $totalOrgs)
-                ->description($activeOrgs . ' active')
+                ->description($activeOrgs.' active')
                 ->descriptionIcon('heroicon-m-building-office')
                 ->color('success'),
 
@@ -38,11 +38,11 @@ class PlatformStatsWidget extends BaseWidget
                 ->color('primary'),
 
             Stat::make('Paid Organizations', $paidOrgs)
-                ->description(number_format(($paidOrgs / max($totalOrgs, 1)) * 100, 1) . '% conversion')
+                ->description(number_format(($paidOrgs / max($totalOrgs, 1)) * 100, 1).'% conversion')
                 ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('warning'),
 
-            Stat::make('Monthly Recurring Revenue', '$' . number_format($mrr))
+            Stat::make('Monthly Recurring Revenue', '$'.number_format($mrr))
                 ->description('From active subscriptions')
                 ->descriptionIcon('heroicon-m-chart-bar')
                 ->color('success'),

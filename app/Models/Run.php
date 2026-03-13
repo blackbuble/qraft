@@ -10,6 +10,7 @@ class Run extends Model
     use BelongsToOrganization;
 
     protected $guarded = [];
+
     protected $casts = [
         'result' => 'array',
         'started_at' => 'datetime',
@@ -21,6 +22,7 @@ class Run extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
     public function agent()
     {
         return $this->belongsTo(Agent::class);

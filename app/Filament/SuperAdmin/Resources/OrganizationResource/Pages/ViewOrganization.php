@@ -4,9 +4,9 @@ namespace App\Filament\SuperAdmin\Resources\OrganizationResource\Pages;
 
 use App\Filament\SuperAdmin\Resources\OrganizationResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ViewRecord;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Pages\ViewRecord;
 
 class ViewOrganization extends ViewRecord
 {
@@ -38,7 +38,7 @@ class ViewOrganization extends ViewRecord
                     ->schema([
                         Infolists\Components\TextEntry::make('subscription_plan')
                             ->badge()
-                            ->color(fn(string $state): string => match ($state) {
+                            ->color(fn (string $state): string => match ($state) {
                                 'free' => 'gray',
                                 'pro' => 'success',
                                 'enterprise' => 'warning',
@@ -46,7 +46,7 @@ class ViewOrganization extends ViewRecord
                             }),
                         Infolists\Components\TextEntry::make('subscription_status')
                             ->badge()
-                            ->color(fn(string $state): string => match ($state) {
+                            ->color(fn (string $state): string => match ($state) {
                                 'active' => 'success',
                                 'canceled' => 'danger',
                                 'past_due' => 'warning',
@@ -64,16 +64,16 @@ class ViewOrganization extends ViewRecord
                     ->schema([
                         Infolists\Components\TextEntry::make('users_count')
                             ->label('Team Members')
-                            ->state(fn($record) => $record->users()->count()),
+                            ->state(fn ($record) => $record->users()->count()),
                         Infolists\Components\TextEntry::make('projects_count')
                             ->label('Projects')
-                            ->state(fn($record) => $record->projects()->count()),
+                            ->state(fn ($record) => $record->projects()->count()),
                         Infolists\Components\TextEntry::make('test_scenarios_count')
                             ->label('Test Scenarios')
-                            ->state(fn($record) => $record->testScenarios()->count()),
+                            ->state(fn ($record) => $record->testScenarios()->count()),
                         Infolists\Components\TextEntry::make('runs_count')
                             ->label('Test Runs')
-                            ->state(fn($record) => $record->runs()->count()),
+                            ->state(fn ($record) => $record->runs()->count()),
                     ])
                     ->columns(4),
 

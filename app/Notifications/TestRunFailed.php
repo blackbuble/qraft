@@ -13,8 +13,7 @@ class TestRunFailed extends Notification implements ShouldQueue
 
     public function __construct(
         public \App\Models\Run $run
-    ) {
-    }
+    ) {}
 
     /**
      * Get the notification's delivery channels.
@@ -32,11 +31,11 @@ class TestRunFailed extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('⚠️ Test Failure: ' . $this->run->project->name . ' - ' . $this->run->testScenario->title)
+            ->subject('⚠️ Test Failure: '.$this->run->project->name.' - '.$this->run->testScenario->title)
             ->error()
-            ->line('The test run #' . $this->run->id . ' has failed.')
-            ->line('Severity: ' . ucfirst($this->run->severity ?? 'Unknown'))
-            ->line('Agent: ' . $this->run->agent->name)
+            ->line('The test run #'.$this->run->id.' has failed.')
+            ->line('Severity: '.ucfirst($this->run->severity ?? 'Unknown'))
+            ->line('Agent: '.$this->run->agent->name)
             ->action('View Analysis', \App\Filament\Resources\RunResource::getUrl('view', ['record' => $this->run]))
             ->line('Thank you for using QRAFT.');
     }

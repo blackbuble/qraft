@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Organization;
-use Illuminate\Support\Facades\Log;
 
 class PlanLimits
 {

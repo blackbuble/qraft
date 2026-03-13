@@ -2,8 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Organization;
-use App\Services\PlanLimits;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Radio;
@@ -77,7 +75,7 @@ class ManageSubscription extends Page
         return [
             Action::make('upgrade')
                 ->label('Upgrade Plan')
-                ->visible(fn() => $this->data['selected_plan'] !== $currentPlan)
+                ->visible(fn () => $this->data['selected_plan'] !== $currentPlan)
                 ->action('upgradePlan')
                 ->requiresConfirmation()
                 ->modalHeading('Upgrade Subscription')
@@ -86,7 +84,7 @@ class ManageSubscription extends Page
 
             Action::make('manage_billing')
                 ->label('Manage Billing')
-                ->url(fn() => $this->getBillingPortalUrl())
+                ->url(fn () => $this->getBillingPortalUrl())
                 ->openUrlInNewTab()
                 ->color('gray')
                 ->icon('heroicon-o-arrow-top-right-on-square'),
@@ -122,7 +120,7 @@ class ManageSubscription extends Page
         $plans = $organization->subscriptionPlans();
         $priceId = $plans[$plan]['stripe_price_id'] ?? null;
 
-        if (!$priceId) {
+        if (! $priceId) {
             Notification::make()
                 ->title('Configuration Error')
                 ->body('Stripe price ID not configured for this plan.')
@@ -136,13 +134,13 @@ class ManageSubscription extends Page
             return $organization
                 ->newSubscription('default', $priceId)
                 ->checkout([
-                    'success_url' => route('filament.admin.pages.manage-subscription') . '?success=true',
-                    'cancel_url' => route('filament.admin.pages.manage-subscription') . '?canceled=true',
+                    'success_url' => route('filament.admin.pages.manage-subscription').'?success=true',
+                    'cancel_url' => route('filament.admin.pages.manage-subscription').'?canceled=true',
                 ]);
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Checkout Error')
-                ->body('Unable to create checkout session: ' . $e->getMessage())
+                ->body('Unable to create checkout session: '.$e->getMessage())
                 ->danger()
                 ->send();
 

@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\TestScenario;
 use App\Models\Run;
+use App\Models\TestScenario;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentationGeneratorService
@@ -33,7 +33,7 @@ class DocumentationGeneratorService
 
         $markdown .= "\n---\n\n";
         $markdown .= "*This documentation was auto-generated from test scenario `{$scenario->title}` and is always up-to-date.*\n\n";
-        $markdown .= "**Last updated**: " . now()->format('F j, Y g:i A') . "\n\n";
+        $markdown .= '**Last updated**: '.now()->format('F j, Y g:i A')."\n\n";
         $markdown .= "**Powered by QRAFT** - Quality Intelligence Platform\n";
 
         return $markdown;
@@ -131,17 +131,17 @@ class DocumentationGeneratorService
             case 'visit':
                 return "Navigate to {$step['value']}";
             case 'click':
-                return "Click element";
+                return 'Click element';
             case 'type':
-                return "Enter text";
+                return 'Enter text';
             case 'assert_text':
-                return "Verify text content";
+                return 'Verify text content';
             case 'assert_visible':
-                return "Verify element visibility";
+                return 'Verify element visibility';
             case 'assert_url':
-                return "Verify URL";
+                return 'Verify URL';
             case 'wait':
-                return "Wait for page";
+                return 'Wait for page';
             default:
                 return $action;
         }
@@ -308,7 +308,7 @@ HTML;
             ? $this->generateHtml($scenario)
             : $this->generateMarkdown($scenario);
 
-        $filename = "docs/" . \Str::slug($scenario->title) . "-{$scenario->id}.{$format}";
+        $filename = 'docs/'.\Str::slug($scenario->title)."-{$scenario->id}.{$format}";
 
         Storage::put($filename, $content);
 
@@ -322,6 +322,6 @@ HTML;
     {
         $filename = $this->saveToStorage($scenario, $format);
 
-        return Storage::download($filename, \Str::slug($scenario->title) . ".{$format}");
+        return Storage::download($filename, \Str::slug($scenario->title).".{$format}");
     }
 }

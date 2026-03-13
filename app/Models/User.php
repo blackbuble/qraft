@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -82,6 +82,7 @@ class User extends Authenticatable
     {
         if ($this->organizations()->where('organizations.id', $organizationId)->exists()) {
             session(['current_organization_id' => $organizationId]);
+
             return true;
         }
 
@@ -102,6 +103,7 @@ class User extends Authenticatable
     public function roleInOrganization(Organization $organization): ?string
     {
         $pivot = $this->organizations()->where('organizations.id', $organization->id)->first()?->pivot;
+
         return $pivot?->role;
     }
 
@@ -118,14 +120,28 @@ class User extends Authenticatable
             ->count();
     }
 
+    public const PLAN_FREE = 'free';
+
+    public const PLAN_PRO = 'pro';
+
+    public const PLAN_ENTERPRISE = 'enterprise';
+
+    public const PLAN_LIMITS = [
+        self::PLAN_FREE => 10,
+        self::PLAN_PRO => 500,
+        self::PLAN_ENTERPRISE => 1000000, // Effectively unlimited
+    ];
+
     /**
      * Get monthly run limit based on plan
      */
     public function getMonthlyRunLimit(): int
     {
-        // TODO: Implement plan-based limits
-        // For now, return free tier limit
-        return 100;
+        // For now, most users are free unless marked otherwise
+        // This could be expanded to a 'plan' column in the future
+        $plan = $this->is_super_admin ? self::PLAN_ENTERPRISE : self::PLAN_FREE;
+
+        return self::PLAN_LIMITS[$plan] ?? self::PLAN_LIMITS[self::PLAN_FREE];
     }
 
     /**
@@ -145,6 +161,7 @@ class User extends Authenticatable
         if ($limit === 0) {
             return 0;
         }
+
         return ($this->getMonthlyRunCount() / $limit) * 100;
     }
 

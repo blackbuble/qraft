@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TestScenario extends Model
 {
     use BelongsToOrganization;
+
     protected $fillable = [
         'project_id',
         'title',

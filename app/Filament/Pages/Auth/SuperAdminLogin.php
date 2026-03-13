@@ -13,7 +13,7 @@ class SuperAdminLogin extends BaseLogin
         return 'Super Admin Access';
     }
 
-    public function getSubHeading(): string|null
+    public function getSubHeading(): ?string
     {
         return 'Platform Administration';
     }
