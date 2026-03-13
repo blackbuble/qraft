@@ -33,27 +33,28 @@ class AnalyzeRunJob implements ShouldQueue
         $result = $this->run->result;
         $screenshotBase64 = null;
 
-        if (!empty($result['screenshot_path'])) {
+        if (! empty($result['screenshot_path'])) {
             try {
                 $disk = $result['screenshot_disk'] ?? $storageSettings->artifact_disk;
                 $imageContent = \Illuminate\Support\Facades\Storage::disk($disk)->get($result['screenshot_path']);
                 $screenshotBase64 = base64_encode($imageContent);
             } catch (\Exception $e) {
-                Log::error("Failed to retrieve screenshot from storage: " . $e->getMessage());
+                Log::error('Failed to retrieve screenshot from storage: '.$e->getMessage());
             }
-        } elseif (!empty($result['screenshot'])) {
+        } elseif (! empty($result['screenshot'])) {
             $screenshotBase64 = $result['screenshot'];
         }
 
         if (empty($screenshotBase64)) {
             Log::warning("Run #{$this->run->id} has no screenshot to analyze.");
+
             return;
         }
 
         try {
-            $technicalContext = "## Console Logs\n" . ($this->run->logs ?: 'None') . "\n\n";
-            $networkErrors = !empty($result['network_errors']) ? json_encode($result['network_errors'], JSON_PRETTY_PRINT) : 'None';
-            $technicalContext .= "## Network Errors\n" . $networkErrors;
+            $technicalContext = "## Console Logs\n".($this->run->logs ?: 'None')."\n\n";
+            $networkErrors = ! empty($result['network_errors']) ? json_encode($result['network_errors'], JSON_PRETTY_PRINT) : 'None';
+            $technicalContext .= "## Network Errors\n".$networkErrors;
 
             $prompt = "Act as a Senior QA Automation Engineer and Technical Lead. Review this screenshot of a web application and the provided technical metadata (network logs and console errors). 
             
@@ -87,14 +88,14 @@ class AnalyzeRunJob implements ShouldQueue
                     $result['ai_analysis_json'] = $analysisData;
 
                     // Keep human readable breakdown for the text field
-                    $analysis = "**Severity: " . ucfirst($analysisData['severity']) . "**\n\n" .
+                    $analysis = '**Severity: '.ucfirst($analysisData['severity'])."**\n\n".
                         $analysisData['summary'];
 
-                    if (!empty($analysisData['technical_rca'])) {
-                        $analysis .= "\n\n**Technical Root Cause:**\n" . $analysisData['technical_rca'];
+                    if (! empty($analysisData['technical_rca'])) {
+                        $analysis .= "\n\n**Technical Root Cause:**\n".$analysisData['technical_rca'];
                     }
 
-                    $analysis .= "\n\n**Issues:**\n- " . implode("\n- ", $analysisData['issues']);
+                    $analysis .= "\n\n**Issues:**\n- ".implode("\n- ", $analysisData['issues']);
                 }
             }
 
@@ -107,7 +108,7 @@ class AnalyzeRunJob implements ShouldQueue
             // Notify stakeholders if Critical or Major issues found
             if (in_array($this->run->severity, ['critical', 'major'])) {
                 $emails = $this->run->project->notification_emails;
-                if (!empty($emails)) {
+                if (! empty($emails)) {
                     \Illuminate\Support\Facades\Notification::route('mail', $emails)
                         ->notify(new \App\Notifications\TestRunFailed($this->run));
 
@@ -116,9 +117,9 @@ class AnalyzeRunJob implements ShouldQueue
             }
 
         } catch (\Exception $e) {
-            Log::error("AI Analysis failed for Run #{$this->run->id}: " . $e->getMessage());
+            Log::error("AI Analysis failed for Run #{$this->run->id}: ".$e->getMessage());
 
-            $result['ai_analysis'] = "AI Analysis Failed: " . $e->getMessage();
+            $result['ai_analysis'] = 'AI Analysis Failed: '.$e->getMessage();
             $this->run->update(['result' => $result]);
         }
     }

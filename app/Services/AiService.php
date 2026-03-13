@@ -15,7 +15,7 @@ class AiService
 
         $provider = collect($settings->providers)->firstWhere('id', $providerId);
 
-        if (!$provider) {
+        if (! $provider) {
             throw new \Exception("Provider {$providerId} not found in settings.");
         }
 
@@ -32,7 +32,7 @@ class AiService
         $providerId = $providerId ?? $settings->default_provider;
         $provider = collect($settings->providers)->firstWhere('id', $providerId);
 
-        if (!$provider) {
+        if (! $provider) {
             throw new \Exception("Provider {$providerId} not found in settings.");
         }
 
@@ -60,8 +60,8 @@ class AiService
             $userContent[] = [
                 'type' => 'image_url',
                 'image_url' => [
-                    'url' => "data:image/jpeg;base64,{$base64Image}"
-                ]
+                    'url' => "data:image/jpeg;base64,{$base64Image}",
+                ],
             ];
         }
 
@@ -69,7 +69,7 @@ class AiService
 
         $response = Http::withToken($provider['key'])
             ->timeout(60)
-            ->post($provider['url'] . '/chat/completions', [
+            ->post($provider['url'].'/chat/completions', [
                 'model' => $provider['model'],
                 'messages' => $messages,
                 'max_tokens' => 1000,
@@ -79,7 +79,7 @@ class AiService
             return $response->json('choices.0.message.content');
         }
 
-        throw new \Exception("OpenAI Error: " . $response->body());
+        throw new \Exception('OpenAI Error: '.$response->body());
     }
 
     protected function analyzeWithGemini(string $prompt, array $provider): string
@@ -97,23 +97,23 @@ class AiService
             $parts[] = [
                 'inlineData' => [
                     'mimeType' => 'image/jpeg',
-                    'data' => $base64Image
-                ]
+                    'data' => $base64Image,
+                ],
             ];
         }
 
         $response = Http::timeout(60)
             ->post($url, [
                 'contents' => [
-                    ['parts' => $parts]
-                ]
+                    ['parts' => $parts],
+                ],
             ]);
 
         if ($response->successful()) {
             return $response->json('candidates.0.content.parts.0.text');
         }
 
-        throw new \Exception("Gemini Error: " . $response->body());
+        throw new \Exception('Gemini Error: '.$response->body());
     }
 
     public function generateTestSteps(string $description, ?string $providerId = null): array
@@ -146,7 +146,8 @@ EOT;
         $json = json_decode(trim($cleaned), true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            Log::error("AiService::generateTestSteps JSON Error: " . json_last_error_msg() . " | Raw: $response");
+            Log::error('AiService::generateTestSteps JSON Error: '.json_last_error_msg()." | Raw: $response");
+
             // Fallback: Return a comment step or empty array
             return [];
         }

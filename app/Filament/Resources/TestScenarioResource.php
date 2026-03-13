@@ -3,22 +3,21 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TestScenarioResource\Pages;
-use App\Filament\Resources\TestScenarioResource\RelationManagers;
 use App\Models\TestScenario;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestScenarioResource extends Resource
 {
     protected static ?string $model = TestScenario::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
     protected static ?string $navigationGroup = 'Testing';
+
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
@@ -93,8 +92,8 @@ class TestScenarioResource extends Resource
                                                 'ai_describe' => '🤖 AI Describe (Natural Language)',
                                             ])
                                             ->default('css')
-                                            ->visible(fn(Forms\Get $get) => in_array($get('action'), ['click', 'type', 'hover', 'select', 'check', 'uncheck', 'assert_text', 'assert_visible']))
-                                            ->helperText(fn(Forms\Get $get) => match ($get('selector_type')) {
+                                            ->visible(fn (Forms\Get $get) => in_array($get('action'), ['click', 'type', 'hover', 'select', 'check', 'uncheck', 'assert_text', 'assert_visible']))
+                                            ->helperText(fn (Forms\Get $get) => match ($get('selector_type')) {
                                                 'xpath' => 'e.g., //button[@id="submit"]',
                                                 'text' => 'e.g., Submit or Login',
                                                 'role' => 'e.g., button or role=button[name="Submit"]',
@@ -106,17 +105,17 @@ class TestScenarioResource extends Resource
                                             }),
                                         Forms\Components\TextInput::make('selector')
                                             ->placeholder('Element selector')
-                                            ->visible(fn(Forms\Get $get) => in_array($get('action'), ['click', 'type', 'hover', 'select', 'check', 'uncheck', 'assert_text', 'assert_visible'])),
+                                            ->visible(fn (Forms\Get $get) => in_array($get('action'), ['click', 'type', 'hover', 'select', 'check', 'uncheck', 'assert_text', 'assert_visible'])),
                                         Forms\Components\TextInput::make('value')
                                             ->placeholder('Input text or expected value')
-                                            ->visible(fn(Forms\Get $get) => in_array($get('action'), ['visit', 'type', 'select', 'wait', 'assert_text'])),
+                                            ->visible(fn (Forms\Get $get) => in_array($get('action'), ['visit', 'type', 'select', 'wait', 'assert_text'])),
                                         Forms\Components\TextInput::make('description')
                                             ->placeholder('Optional note'),
                                     ]),
                             ])
                             ->orderable()
                             ->cloneable()
-                            ->itemLabel(fn(array $state): ?string => $state['action'] . ' ' . ($state['selector'] ?? '')),
+                            ->itemLabel(fn (array $state): ?string => $state['action'].' '.($state['selector'] ?? '')),
                     ]),
 
                 Forms\Components\Section::make('Network Mocking (Optional)')
@@ -137,31 +136,31 @@ class TestScenarioResource extends Resource
                                         Forms\Components\TextInput::make('url')
                                             ->label('URL Pattern')
                                             ->placeholder('**/api/users or **/*.{png,jpg}')
-                                            ->visible(fn(Forms\Get $get) => in_array($get('type'), ['mock_api', 'block_resource']))
+                                            ->visible(fn (Forms\Get $get) => in_array($get('type'), ['mock_api', 'block_resource']))
                                             ->helperText('Use wildcards: ** for any path, * for segment'),
                                         Forms\Components\TextInput::make('pattern')
                                             ->label('Resource Pattern')
                                             ->placeholder('**/*.{png,jpg,css}')
-                                            ->visible(fn(Forms\Get $get) => $get('type') === 'block_resource'),
+                                            ->visible(fn (Forms\Get $get) => $get('type') === 'block_resource'),
                                         Forms\Components\TextInput::make('delay_ms')
                                             ->label('Delay (ms)')
                                             ->numeric()
                                             ->default(1000)
-                                            ->visible(fn(Forms\Get $get) => $get('type') === 'throttle'),
+                                            ->visible(fn (Forms\Get $get) => $get('type') === 'throttle'),
                                         Forms\Components\Textarea::make('response')
                                             ->label('Mock Response (JSON)')
                                             ->placeholder('{"success": true, "data": []}')
-                                            ->visible(fn(Forms\Get $get) => $get('type') === 'mock_api')
+                                            ->visible(fn (Forms\Get $get) => $get('type') === 'mock_api')
                                             ->columnSpanFull(),
                                         Forms\Components\TextInput::make('status')
                                             ->label('HTTP Status')
                                             ->numeric()
                                             ->default(200)
-                                            ->visible(fn(Forms\Get $get) => $get('type') === 'mock_api'),
+                                            ->visible(fn (Forms\Get $get) => $get('type') === 'mock_api'),
                                     ]),
                             ])
                             ->collapsible()
-                            ->itemLabel(fn(array $state): ?string => ($state['type'] ?? 'Mock') . ': ' . ($state['url'] ?? $state['pattern'] ?? 'Network')),
+                            ->itemLabel(fn (array $state): ?string => ($state['type'] ?? 'Mock').': '.($state['url'] ?? $state['pattern'] ?? 'Network')),
                     ])
                     ->collapsible()
                     ->collapsed(),
@@ -194,7 +193,7 @@ class TestScenarioResource extends Resource
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('steps')
-                    ->getStateUsing(fn(TestScenario $record) => count($record->steps ?? []) . ' steps'),
+                    ->getStateUsing(fn (TestScenario $record) => count($record->steps ?? []).' steps'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -236,6 +235,7 @@ class TestScenarioResource extends Resource
                                     ->body('AI could not generate valid steps. Please try rephrasing your requirement.')
                                     ->danger()
                                     ->send();
+
                                 return;
                             }
 
@@ -251,8 +251,8 @@ class TestScenarioResource extends Resource
 
                             $mode = ($data['append_mode'] ?? false) ? 'appended' : 'generated';
                             \Filament\Notifications\Notification::make()
-                                ->title('Test Steps ' . ucfirst($mode) . '!')
-                                ->body(count($steps) . ' steps ' . $mode . '. Review and edit as needed.')
+                                ->title('Test Steps '.ucfirst($mode).'!')
+                                ->body(count($steps).' steps '.$mode.'. Review and edit as needed.')
                                 ->success()
                                 ->send();
 

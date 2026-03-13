@@ -2,10 +2,10 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Run;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use App\Models\Run;
 
 class RecentRuns extends BaseWidget
 {
@@ -39,7 +39,7 @@ class RecentRuns extends BaseWidget
             ])
             ->actions([
                 Tables\Actions\Action::make('view')
-                    ->url(fn(Run $record): string => \App\Filament\Resources\RunResource::getUrl('edit', ['record' => $record])),
+                    ->url(fn (Run $record): string => \App\Filament\Resources\RunResource::getUrl('edit', ['record' => $record])),
             ]);
     }
 }

@@ -12,7 +12,7 @@ use Laravel\Cashier\Billable;
 
 class Organization extends Model
 {
-    use HasFactory, HasUuids, Billable;
+    use Billable, HasFactory, HasUuids;
 
     protected $fillable = [
         'name',
@@ -156,6 +156,7 @@ class Organization extends Model
     public function currentPlanName(): string
     {
         $plans = $this->subscriptionPlans();
+
         return $plans[$this->subscription_plan]['name'] ?? 'Free';
     }
 }

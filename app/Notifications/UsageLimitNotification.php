@@ -2,18 +2,19 @@
 
 namespace App\Notifications;
 
+use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Filament\Notifications\Notification as FilamentNotification;
 
 class UsageLimitNotification extends Notification
 {
     use Queueable;
 
     protected $usagePercentage;
+
     protected $currentRuns;
+
     protected $limit;
 
     public function __construct(int $currentRuns, int $limit)
@@ -42,7 +43,7 @@ class UsageLimitNotification extends Notification
 
         $message = (new MailMessage)
             ->subject($subject)
-            ->greeting('Hello ' . $notifiable->name . '!')
+            ->greeting('Hello '.$notifiable->name.'!')
             ->line("You've used **{$this->currentRuns} out of {$this->limit}** test runs this month ({$this->usagePercentage}%).");
 
         if ($this->usagePercentage >= 100) {

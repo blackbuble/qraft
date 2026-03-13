@@ -2,8 +2,8 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
 use App\Models\Run;
+use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
@@ -25,14 +25,14 @@ class TestRunsChart extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Test Runs',
-                    'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
                     'fill' => 'start',
                     'borderColor' => '#6366f1', // Indigo-500
                     'backgroundColor' => 'rgba(99, 102, 241, 0.1)', // Indigo-500 with opacity
                     'tension' => 0.4,
                 ],
             ],
-            'labels' => $data->map(fn(TrendValue $value) => $value->date),
+            'labels' => $data->map(fn (TrendValue $value) => $value->date),
         ];
     }
 

@@ -47,15 +47,15 @@ class EditOrganizationProfile extends EditTenantProfile
                         TextInput::make('subscription_plan')
                             ->label('Current Plan')
                             ->disabled()
-                            ->formatStateUsing(fn($state) => ucfirst($state ?? 'free')),
+                            ->formatStateUsing(fn ($state) => ucfirst($state ?? 'free')),
                         TextInput::make('subscription_status')
                             ->label('Status')
                             ->disabled()
-                            ->formatStateUsing(fn($state) => ucfirst($state ?? 'active')),
+                            ->formatStateUsing(fn ($state) => ucfirst($state ?? 'active')),
                         TextInput::make('trial_ends_at')
                             ->label('Trial Ends')
                             ->disabled()
-                            ->formatStateUsing(fn($state) => $state ? $state->format('M d, Y') : 'N/A'),
+                            ->formatStateUsing(fn ($state) => $state ? $state->format('M d, Y') : 'N/A'),
                     ])
                     ->columns(3),
             ]);

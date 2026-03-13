@@ -29,7 +29,7 @@ class RecentOrganizationsWidget extends BaseWidget
                     ->label('Owner'),
                 Tables\Columns\TextColumn::make('subscription_plan')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'free' => 'gray',
                         'pro' => 'success',
                         'enterprise' => 'warning',

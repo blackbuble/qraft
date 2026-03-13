@@ -10,6 +10,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class ActiveTestRuns extends BaseWidget
 {
     protected static ?int $sort = 2;
+
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'Active Test Runs';
@@ -40,7 +41,7 @@ class ActiveTestRuns extends BaseWidget
             ])
             ->actions([
                 Tables\Actions\Action::make('view')
-                    ->url(fn(Run $record): string => route('filament.admin.resources.runs.view', $record))
+                    ->url(fn (Run $record): string => route('filament.admin.resources.runs.view', $record))
                     ->icon('heroicon-m-eye'),
             ])
             ->poll('5s'); // Auto-refresh every 5 seconds

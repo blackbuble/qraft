@@ -15,9 +15,9 @@ class AiElementService
 
     /**
      * Find element by natural language description
-     * 
-     * @param string $screenshotBase64 Base64 encoded screenshot
-     * @param string $description Natural language description (e.g., "the blue submit button in the footer")
+     *
+     * @param  string  $screenshotBase64  Base64 encoded screenshot
+     * @param  string  $description  Natural language description (e.g., "the blue submit button in the footer")
      * @return array ['selector' => 'css selector', 'coordinates' => ['x' => 100, 'y' => 200], 'confidence' => 0.95]
      */
     public function findElementByDescription(string $screenshotBase64, string $description): array
@@ -59,24 +59,25 @@ If element not found, return: {\"found\": false, \"reasoning\": \"explanation\"}
 
             return [
                 'found' => false,
-                'reasoning' => 'Failed to parse AI response'
+                'reasoning' => 'Failed to parse AI response',
             ];
 
         } catch (\Exception $e) {
-            Log::error("AI Element Discovery failed: " . $e->getMessage());
+            Log::error('AI Element Discovery failed: '.$e->getMessage());
+
             return [
                 'found' => false,
-                'reasoning' => 'AI service error: ' . $e->getMessage()
+                'reasoning' => 'AI service error: '.$e->getMessage(),
             ];
         }
     }
 
     /**
      * Suggest alternative selectors when original fails
-     * 
-     * @param string $screenshotBase64 Current page screenshot
-     * @param string $failedSelector The selector that failed
-     * @param string $elementDescription What the element should do/look like
+     *
+     * @param  string  $screenshotBase64  Current page screenshot
+     * @param  string  $failedSelector  The selector that failed
+     * @param  string  $elementDescription  What the element should do/look like
      * @return array ['suggestions' => ['#new-selector', '.alternative'], 'reasoning' => 'explanation']
      */
     public function healSelector(string $screenshotBase64, string $failedSelector, string $elementDescription): array
@@ -119,15 +120,16 @@ Return ONLY valid JSON:
             return [
                 'element_exists' => false,
                 'suggestions' => [],
-                'diagnosis' => 'Failed to parse AI response'
+                'diagnosis' => 'Failed to parse AI response',
             ];
 
         } catch (\Exception $e) {
-            Log::error("Selector healing failed: " . $e->getMessage());
+            Log::error('Selector healing failed: '.$e->getMessage());
+
             return [
                 'element_exists' => false,
                 'suggestions' => [],
-                'diagnosis' => 'AI service error: ' . $e->getMessage()
+                'diagnosis' => 'AI service error: '.$e->getMessage(),
             ];
         }
     }

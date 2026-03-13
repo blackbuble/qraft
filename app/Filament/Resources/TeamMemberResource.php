@@ -81,10 +81,11 @@ class TeamMemberResource extends Resource
                         $pivot = $record->organizations()
                             ->where('organizations.id', $organization->id)
                             ->first()?->pivot;
+
                         return ucfirst($pivot?->role ?? 'member');
                     })
                     ->badge()
-                    ->color(fn(string $state): string => match (strtolower($state)) {
+                    ->color(fn (string $state): string => match (strtolower($state)) {
                         'owner' => 'danger',
                         'admin' => 'warning',
                         default => 'gray',
@@ -121,7 +122,7 @@ class TeamMemberResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn(User $record) => auth()->user()->ownsOrganization($organization)),
+                    ->visible(fn (User $record) => auth()->user()->ownsOrganization($organization)),
                 Tables\Actions\DeleteAction::make()
                     ->label('Remove')
                     ->modalHeading('Remove Team Member')
@@ -135,8 +136,7 @@ class TeamMemberResource extends Resource
                             ->send();
                     })
                     ->visible(
-                        fn(User $record) =>
-                        auth()->user()->ownsOrganization($organization) &&
+                        fn (User $record) => auth()->user()->ownsOrganization($organization) &&
                         $record->id !== auth()->id()
                     ),
             ])
@@ -160,12 +160,13 @@ class TeamMemberResource extends Resource
                     ->action(function (array $data) use ($organization) {
                         // Check plan limits
                         $planLimits = app(PlanLimits::class);
-                        if (!$planLimits->canAddTeamMember($organization)) {
+                        if (! $planLimits->canAddTeamMember($organization)) {
                             Notification::make()
                                 ->title('Team Member Limit Reached')
                                 ->body('Please upgrade your plan to add more team members.')
                                 ->warning()
                                 ->send();
+
                             return;
                         }
 
@@ -176,6 +177,7 @@ class TeamMemberResource extends Resource
                                 ->title('User Already in Organization')
                                 ->danger()
                                 ->send();
+
                             return;
                         }
 
@@ -188,7 +190,7 @@ class TeamMemberResource extends Resource
 
                         // TODO: Send invitation email
                         // Mail::to($data['email'])->send(new TeamInvitation($invitation));
-            
+
                         Notification::make()
                             ->title('Invitation Sent')
                             ->body("An invitation has been sent to {$data['email']}")

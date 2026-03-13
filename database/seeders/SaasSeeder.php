@@ -59,11 +59,11 @@ class SaasSeeder extends Seeder
         // Attach users to organizations (sync to avoid duplicates)
         $org1->users()->syncWithoutDetaching([
             $user1->id => ['role' => 'owner'],
-            $user2->id => ['role' => 'member']
+            $user2->id => ['role' => 'member'],
         ]);
 
         $org2->users()->syncWithoutDetaching([
-            $user2->id => ['role' => 'owner']
+            $user2->id => ['role' => 'owner'],
         ]);
 
         $this->command->info('✅ Created/Updated 2 demo users and 2 organizations');

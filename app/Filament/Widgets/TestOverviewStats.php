@@ -5,7 +5,6 @@ namespace App\Filament\Widgets;
 use App\Models\Run;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Database\Eloquent\Builder;
 
 class TestOverviewStats extends BaseWidget
 {

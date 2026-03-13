@@ -37,12 +37,13 @@ class ExecuteTestJob implements ShouldQueue
 
         $steps = [];
 
-        if ($scenario && !empty($scenario->steps)) {
+        if ($scenario && ! empty($scenario->steps)) {
             $steps = array_map(function ($step) use ($project) {
                 if (($step['action'] === 'visit') && str_starts_with($step['value'], '/')) {
                     $baseUrl = rtrim($project->repo_url ?? 'http://example.com', '/');
-                    $step['value'] = $baseUrl . $step['value'];
+                    $step['value'] = $baseUrl.$step['value'];
                 }
+
                 return $step;
             }, $scenario->steps);
         } else {
@@ -50,23 +51,23 @@ class ExecuteTestJob implements ShouldQueue
             $steps = [
                 [
                     'action' => 'visit',
-                    'value' => $project->repo_url ?? 'http://example.com'
-                ]
+                    'value' => $project->repo_url ?? 'http://example.com',
+                ],
             ];
         }
 
         $payload = [
             'run_id' => $this->run->id,
             'steps' => $steps,
-            'network_mocks' => $scenario?->network_mocks ?? []
+            'network_mocks' => $scenario?->network_mocks ?? [],
         ];
 
         try {
             Redis::rpush('qraft:inspector:tasks', json_encode($payload));
-            Log::info("Dispatched Run #{$this->run->id} to inspector queue with " . count($steps) . " steps.");
+            Log::info("Dispatched Run #{$this->run->id} to inspector queue with ".count($steps).' steps.');
         } catch (\Exception $e) {
-            $this->run->update(['status' => 'failed', 'logs' => "Failed to dispatch: " . $e->getMessage()]);
-            Log::error("Failed to push to Redis: " . $e->getMessage());
+            $this->run->update(['status' => 'failed', 'logs' => 'Failed to dispatch: '.$e->getMessage()]);
+            Log::error('Failed to push to Redis: '.$e->getMessage());
         }
     }
 }

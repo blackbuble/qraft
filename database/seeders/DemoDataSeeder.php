@@ -3,11 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Project;
-use App\Models\TestScenario;
 use App\Models\Run;
+use App\Models\TestScenario;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class DemoDataSeeder extends Seeder
 {
@@ -75,6 +74,9 @@ class DemoDataSeeder extends Seeder
                 ['action' => 'assert_text', 'selector' => '.user-name', 'value' => 'John Doe', 'description' => 'Verify user name is displayed'],
             ],
         ]);
+
+        // Create sample runs
+        $this->createSampleRuns($registration);
     }
 
     private function createSaaSProject(User $user): void
@@ -102,6 +104,9 @@ class DemoDataSeeder extends Seeder
                 ['action' => 'assert_text', 'selector' => '.welcome-text', 'value' => 'Welcome back', 'description' => 'Verify welcome message'],
             ],
         ]);
+
+        // Create sample runs
+        $this->createSampleRuns($login);
     }
 
     private function createBlogProject(User $user): void
@@ -132,5 +137,30 @@ class DemoDataSeeder extends Seeder
                 ['action' => 'assert_text', 'selector' => '.post-title', 'value' => 'Getting Started with QRAFT', 'description' => 'Verify post title'],
             ],
         ]);
+
+        // Create sample runs
+        $this->createSampleRuns($createPost);
+    }
+
+    private function createSampleRuns(TestScenario $scenario): void
+    {
+        $statuses = ['completed', 'failed', 'completed', 'completed'];
+
+        foreach ($statuses as $index => $status) {
+            Run::create([
+                'test_scenario_id' => $scenario->id,
+                'status' => $status,
+                'started_at' => now()->subDays(4 - $index)->subHours(rand(1, 10)),
+                'completed_at' => now()->subDays(4 - $index)->subHours(rand(1, 10))->addMinutes(rand(1, 5)),
+                'results' => [
+                    'title' => $scenario->title,
+                    'steps_executed' => count($scenario->steps),
+                    'logs' => [
+                        ['type' => 'info', 'message' => 'Run started'],
+                        ['type' => 'info', 'message' => 'Steps executed successfully'],
+                    ],
+                ],
+            ]);
+        }
     }
 }

@@ -25,7 +25,7 @@ class ScheduleTestScenarios extends Command
      */
     public function handle()
     {
-        $this->info("Checking for scheduled test scenarios...");
+        $this->info('Checking for scheduled test scenarios...');
 
         $scenarios = \App\Models\TestScenario::where('is_active', true)
             ->where('frequency', '!=', 'manual')
@@ -38,12 +38,12 @@ class ScheduleTestScenarios extends Command
             }
         }
 
-        $this->info("Done.");
+        $this->info('Done.');
     }
 
     protected function shouldRun($scenario)
     {
-        if (!$scenario->last_run_at) {
+        if (! $scenario->last_run_at) {
             return true;
         }
 
@@ -63,8 +63,9 @@ class ScheduleTestScenarios extends Command
         // Find default agent for project (or first available)
         $agent = $scenario->project->agents->first();
 
-        if (!$agent) {
+        if (! $agent) {
             $this->error("No agent found for project: {$scenario->project->name}");
+
             return;
         }
 

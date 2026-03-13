@@ -16,7 +16,7 @@ trait BelongsToOrganization
     {
         // Automatically set organization_id when creating
         static::creating(function ($model) {
-            if (!$model->organization_id && Filament::getTenant()) {
+            if (! $model->organization_id && Filament::getTenant()) {
                 $model->organization_id = Filament::getTenant()->id;
             }
         });
@@ -24,7 +24,7 @@ trait BelongsToOrganization
         // Add global scope to filter by current organization
         static::addGlobalScope('organization', function (Builder $builder) {
             if (Filament::getTenant()) {
-                $builder->where($builder->getQuery()->from . '.organization_id', Filament::getTenant()->id);
+                $builder->where($builder->getQuery()->from.'.organization_id', Filament::getTenant()->id);
             }
         });
     }

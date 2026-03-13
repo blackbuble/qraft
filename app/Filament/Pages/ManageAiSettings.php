@@ -10,8 +10,11 @@ use Filament\Pages\SettingsPage;
 class ManageAiSettings extends SettingsPage
 {
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
+
     protected static ?string $navigationGroup = 'System';
+
     protected static ?string $navigationLabel = 'AI Settings';
+
     protected static ?int $navigationSort = 1;
 
     protected static string $settings = AiSettings::class;
@@ -64,7 +67,7 @@ class ManageAiSettings extends SettingsPage
                                     ->required()
                                     ->columnSpanFull(),
                             ])
-                            ->itemLabel(fn(array $state): ?string => $state['name'] ?? null)
+                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
                             ->collapsed(),
                     ]),
             ]);

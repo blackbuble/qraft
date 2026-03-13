@@ -14,7 +14,7 @@ class SuperAdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Check if user is super admin
-        if (!auth()->check() || !auth()->user()->is_super_admin) {
+        if (! auth()->check() || ! auth()->user()->is_super_admin) {
             abort(403, 'Access denied. Super admin privileges required.');
         }
 

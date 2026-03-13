@@ -155,7 +155,11 @@ async function processTask(taskData) {
             try {
                 switch (step.action) {
                     case 'visit':
-                        await page.goto(step.value, { waitUntil: 'networkidle', timeout: 30000 });
+                        let url = step.value;
+                        if (url.startsWith('/')) {
+                            url = `${APP_URL}${url}`;
+                        }
+                        await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
                         break;
 
                     case 'click':

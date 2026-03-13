@@ -10,9 +10,13 @@ use Filament\Pages\SettingsPage;
 class ManageStorageSettings extends SettingsPage
 {
     protected static ?string $navigationIcon = 'heroicon-o-server-stack';
+
     protected static ?string $navigationGroup = 'System';
+
     protected static ?string $navigationLabel = 'Storage';
+
     protected static ?string $title = 'Storage Settings';
+
     protected static ?int $sort = 2;
 
     protected static string $settings = StorageSettings::class;
@@ -51,7 +55,7 @@ class ManageStorageSettings extends SettingsPage
 
                 Forms\Components\Section::make('AWS S3 Credentials')
                     ->description('Configuration for Amazon S3 or compatible storage services (R2, DigitalOcean Spaces, etc.).')
-                    ->visible(fn($get) => $get('artifact_disk') === 's3')
+                    ->visible(fn ($get) => $get('artifact_disk') === 's3')
                     ->schema([
                         Forms\Components\Grid::make(2)
                             ->schema([
